@@ -78,7 +78,7 @@ int Controller::getDelta(float rad)
     return 0;
 }
 
-// float Controller::readX(int hand)
+float Controller::readX(int hand)
 {
     float offset = 0;
     if (hand == R)
