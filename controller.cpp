@@ -25,7 +25,7 @@ void Controller::rightHeand()
     int butuon = 0;
     if (umyo.getMuscleLevel(R) > 1000)
         butuon = MOUSE_BUTTON_LEFT;
-    while (!hid.setMouseState(butuon, -getDelta(readX(R)), -getDelta(readY(R))))
+    while (!hid.setMouseState(butuon, -getDelta(readX(R)), getDelta(readY(R))))
         ;
 }
 
@@ -44,7 +44,7 @@ void Controller::leftHeand()
     if (deltay < -10)
         ykey = HID_KEY_S; // down
     if (umyo.getMuscleLevel(L) > 1000)
-        while (!hid.setMouseState(MOUSE_BUTTON_RIGHT, -getDelta(readX(R)), -getDelta(readY(R))))
+        while (!hid.setMouseState(MOUSE_BUTTON_RIGHT, -getDelta(readX(R)), getDelta(readY(R))))
             ;
     while (!hid.setKeyboardKey(xkey))
         ;
@@ -80,7 +80,12 @@ int Controller::getDelta(float rad)
 
 float Controller::readX(int hand)
 {
-    float x = umyo.getYaw(hand) + rxoffset;
+    float offset = 0;
+    if (hand == R)
+        offset = rxoffset;
+    if (hand == L)
+        offset = lxoffset;
+    float x = umyo.getYaw(hand) + offset;
     if (x > _360DEG)
         x -= _360DEG;
     if (x < 0)
@@ -90,11 +95,16 @@ float Controller::readX(int hand)
 
 float Controller::readY(int hand)
 {
-    float y = umyo.getPitch(hand) + ryoffset;
-    if (y > _180DEG)
-        y -= _180DEG;
+    float offset = 0;
+    if (hand == R)
+        offset = rxoffset;
+    if (hand == L)
+        offset = lxoffset;
+    float y = umyo.getPitch(hand) + offset;
+    if (y > _360DEG)
+        y -= _360DEG;
     if (y < 0)
-        y += _180DEG;
+        y += _360DEG;
     return y;
 }
 

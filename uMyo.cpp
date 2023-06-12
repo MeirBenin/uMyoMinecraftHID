@@ -159,7 +159,7 @@ float uMyo::getPitch(uint8_t devidx)
 	Qgs.y = -devices[devidx].Qsg.y;
 	Qgs.z = -devices[devidx].Qsg.z;
 	rotate_v(&Qgs, &nzg);
-	return acos_f(v_dot(&nzg, &ny));
+	return acos_f(v_dot(&nzg, &ny)) + M_PI;
 }
 float uMyo::getRoll(uint8_t devidx)
 {
@@ -171,7 +171,7 @@ float uMyo::getRoll(uint8_t devidx)
 	Qgs.y = -devices[devidx].Qsg.y;
 	Qgs.z = -devices[devidx].Qsg.z;
 	rotate_v(&Qgs, &nzg);
-	return atan2_f(nzg.z, nzg.x);
+	return atan2_f(nzg.z, nzg.x) + M_PI;
 }
 float uMyo::getYaw(uint8_t devidx)
 {
