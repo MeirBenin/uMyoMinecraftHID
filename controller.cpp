@@ -50,32 +50,28 @@ void Controller::leftHeand()
         hid.setMouseState(MOUSE_BUTTON_RIGHT, 0, 0);
 }
 
-int Controller::getDelta(float radian)
+int Controller::getDelta(float rad)
 {
-    if (radian > _0DEG && radian <= _30DEG)
-        return 10;
-    if (radian > _30DEG && radian <= _60DEG)
+
+    if ((rad >= _70DEG && rad <= _110DEG) ||
+        (rad >= _250DEG && rad <= _290DEG))
+        return 0;
+
+    if ((rad >= _60DEG && rad <= _70DEG) ||
+        (rad >= _290DEG && rad <= _300DEG))
         return 5;
-    if (radian > _60DEG && radian <= _90DEG)
-        return 0;
-    if (radian > _90DEG && radian <= _120DEG)
-        return 0;
-    if (radian > _120DEG && radian <= _150DEG)
+
+    if ((rad >= _110DEG && rad <= _120DEG) ||
+        (rad >= _240DEG && rad <= _250DEG))
         return -5;
-    if (radian > _150DEG && radian <= _180DEG)
-        return -10;
-    if (radian > _180DEG && radian <= _210DEG)
-        return -10;
-    if (radian > _210DEG && radian <= _240DEG)
-        return -10;
-    if (radian > _240DEG && radian <= _270DEG)
-        return 0;
-    if (radian > _270DEG && radian <= _300DEG)
-        return 0;
-    if (radian > _300DEG && radian <= _330DEG)
+
+    if ((rad >= _0DEG && rad <= _60DEG) ||
+        (rad >= _300DEG && rad <= _360DEG))
         return 10;
-    if (radian > _330DEG && radian <= _360DEG)
-        return 10;
+
+    if ((rad >= _120DEG && rad <= _180DEG) ||
+        (rad >= _180DEG && rad <= _240DEG))
+        return -10;
 
     return 0;
 }
