@@ -21,7 +21,6 @@ private:
     float lxoffset = 0;
 
     int getDelta(float radian);
-    void update();
     void rightHeand();
     void leftHeand();
     bool isMenu();

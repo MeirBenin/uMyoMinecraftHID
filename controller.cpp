@@ -5,21 +5,15 @@ Controller::Controller()
     stdio_init_all();
 }
 
-void Controller::update()
-{
-    hid.update();
-    umyo.update();
-}
-
 void Controller::run()
 {
     while (true)
     {
-        update();
+        umyo.update();
         if (!connect())
-            continue;
-        // if (isMenu())
-        //     continue;
+        continue;
+        // // if (isMenu())
+        // //     continue;
         led.off();
         rightHeand();
         leftHeand();
@@ -31,23 +25,31 @@ void Controller::rightHeand()
     int butuon = 0;
     if (umyo.getMuscleLevel(R) > 1000)
         butuon = MOUSE_BUTTON_LEFT;
-    hid.setMouseState(butuon, -getDelta(readX(R)), -getDelta(readY(R)));
+    while (!hid.setMouseState(butuon, -getDelta(readX(R)), -getDelta(readY(R))))
+        ;
 }
 
 void Controller::leftHeand()
 {
     int deltax = getDelta(readX(L));
     int deltay = getDelta(readY(L));
-    if (deltax < 0)
-        hid.setKeyboardKey(HID_KEY_D);
-    if (deltax > 0)
-        hid.setKeyboardKey(HID_KEY_A);
-    if (deltay < 0)
-        hid.setKeyboardKey(HID_KEY_W);
-    if (deltay > 0)
-        hid.setKeyboardKey(HID_KEY_S);
+    uint8_t xkey = HID_KEY_NONE;
+    uint8_t ykey = HID_KEY_NONE;
+    if (deltax > 10)
+        xkey = HID_KEY_D; // right
+    if (deltax < -10)
+        xkey = HID_KEY_A; // left
+    if (deltay > 10)
+        ykey = HID_KEY_W; // up
+    if (deltay < -10)
+        ykey = HID_KEY_S; // down
     if (umyo.getMuscleLevel(L) > 1000)
-        hid.setMouseState(MOUSE_BUTTON_RIGHT, 0, 0);
+        while (!hid.setMouseState(MOUSE_BUTTON_RIGHT, -getDelta(readX(R)), -getDelta(readY(R))))
+            ;
+    while (!hid.setKeyboardKey(xkey))
+        ;
+    while (!hid.setKeyboardKey(ykey))
+        ;
 }
 
 int Controller::getDelta(float rad)
@@ -108,6 +110,7 @@ bool Controller::isMenu()
 
 bool Controller::connect()
 {
+    hid.update();
     if (umyo.getDeviceCount() >= 2)
         return true;
     led.toggle();
@@ -117,10 +120,10 @@ bool Controller::connect()
 
 bool Controller::initIMU()
 {
-    led.on();
-    update();
+    umyo.update();
     if (!connect())
         return false;
+    led.on();
     if (specialAction())
     {
         ryoffset = _90DEG - umyo.getPitch(R);
@@ -129,5 +132,6 @@ bool Controller::initIMU()
         lyoffset = _90DEG - umyo.getYaw(L);
         return true;
     }
+    hid.update();
     return false;
 }
