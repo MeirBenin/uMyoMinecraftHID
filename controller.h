@@ -1,7 +1,6 @@
 #pragma once
 #include "pico/stdlib.h"
 #include "umyo.h"
-#include "HIDManager.h"
 #include "led.h"
 
 #define _0DEG 0
@@ -29,7 +28,6 @@ class Controller
 {
 private:
     uMyo umyo = uMyo();
-    HIDManager hid = HIDManager();
     Led led = Led();
     float ryoffset = 0;
     float rxoffset = 0;

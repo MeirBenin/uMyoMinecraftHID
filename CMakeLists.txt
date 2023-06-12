@@ -19,10 +19,8 @@ add_executable(${PROJECT_NAME}
   radio.cpp
   uMyo.cpp
   quat_math.cpp
-  HIDManager.cpp
   controller.cpp
   led.cpp
-  usb_descriptors.c
   )
 
 
@@ -35,6 +33,4 @@ target_link_libraries(${PROJECT_NAME}
   RF24
   pico_stdlib
   hardware_spi
-  tinyusb_device
-  tinyusb_board
 )

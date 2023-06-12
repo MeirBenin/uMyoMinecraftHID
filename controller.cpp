@@ -7,7 +7,6 @@ Controller::Controller()
 
 void Controller::update()
 {
-    hid.update();
     umyo.update();
 }
 
@@ -21,33 +20,34 @@ void Controller::run()
         // if (isMenu())
         //     continue;
         led.off();
-        rightHeand();
-        leftHeand();
+        // rightHeand();
+        // leftHeand();
+        printf("10 -10 %d %d %d %d\n", -getDelta(readX(R)), -getDelta(readY(R)), getDelta(readX(L)), getDelta(readY(L)));
     }
 }
 
 void Controller::rightHeand()
 {
-    int butuon = 0;
-    if (umyo.getMuscleLevel(R) > 1000)
-        butuon = MOUSE_BUTTON_LEFT;
-    hid.setMouseState(butuon, -getDelta(readX(R)), -getDelta(readY(R)));
+    // int butuon = 0;
+    // if (umyo.getMuscleLevel(R) > 1000)
+    //     butuon = MOUSE_BUTTON_LEFT;
+    // hid.setMouseState(butuon, -getDelta(readX(R)), -getDelta(readY(R)));
 }
 
 void Controller::leftHeand()
 {
-    int deltax = getDelta(readX(L));
-    int deltay = getDelta(readY(L));
-    if (deltax < 0)
-        hid.setKeyboardKey(HID_KEY_D);
-    if (deltax > 0)
-        hid.setKeyboardKey(HID_KEY_A);
-    if (deltay < 0)
-        hid.setKeyboardKey(HID_KEY_W);
-    if (deltay > 0)
-        hid.setKeyboardKey(HID_KEY_S);
-    if (umyo.getMuscleLevel(L) > 1000)
-        hid.setMouseState(MOUSE_BUTTON_RIGHT, 0, 0);
+//     int deltax = getDelta(readX(L));
+//     int deltay = getDelta(readY(L));
+//     if (deltax < 0)
+//         hid.setKeyboardKey(HID_KEY_D);
+//     if (deltax > 0)
+//         hid.setKeyboardKey(HID_KEY_A);
+//     if (deltay < 0)
+//         hid.setKeyboardKey(HID_KEY_W);
+//     if (deltay > 0)
+//         hid.setKeyboardKey(HID_KEY_S);
+//     if (umyo.getMuscleLevel(L) > 1000)
+//         hid.setMouseState(MOUSE_BUTTON_RIGHT, 0, 0);
 }
 
 int Controller::getDelta(float radian)
