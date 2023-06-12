@@ -11,7 +11,7 @@ void Controller::run()
     {
         umyo.update();
         if (!connect())
-        continue;
+            continue;
         // // if (isMenu())
         // //     continue;
         led.off();
@@ -78,7 +78,7 @@ int Controller::getDelta(float rad)
     return 0;
 }
 
-float Controller::readX(int hand)
+// float Controller::readX(int hand)
 {
     float offset = 0;
     if (hand == R)
@@ -97,14 +97,14 @@ float Controller::readY(int hand)
 {
     float offset = 0;
     if (hand == R)
-        offset = rxoffset;
+        offset = ryoffset;
     if (hand == L)
-        offset = lxoffset;
+        offset = lyoffset;
     float y = umyo.getPitch(hand) + offset;
-    if (y > _360DEG)
-        y -= _360DEG;
+    if (y > _180DEG)
+        y -= _180DEG;
     if (y < 0)
-        y += _360DEG;
+        y += _180DEG;
     return y;
 }
 
@@ -137,9 +137,9 @@ bool Controller::initIMU()
     if (specialAction())
     {
         ryoffset = _90DEG - umyo.getPitch(R);
+        lyoffset = _90DEG - umyo.getPitch(L);
         rxoffset = _90DEG - umyo.getYaw(R);
-        lxoffset = _90DEG - umyo.getPitch(L);
-        lyoffset = _90DEG - umyo.getYaw(L);
+        lxoffset = _90DEG - umyo.getYaw(L);
         return true;
     }
     hid.update();
