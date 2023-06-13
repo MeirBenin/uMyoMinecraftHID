@@ -133,18 +133,17 @@ bool Controller::specialAction()
 
 bool Controller::isMenu()
 {
-    // static bool isMenu = false;
-    // if (specialAction())
-    // {
-    //     led.on();
-    //     isMenu = !isMenu;
-    //     pushKey(HID_KEY_E);
-    //     return true;
-    // }
-    // if (!isMenu)
-    //     led.off();
-    // return isMenu;
-    return false;
+    static bool isMenu = false;
+    if (specialAction())
+    {
+        led.on();
+        isMenu = !isMenu;
+        pushKey(HID_KEY_E);
+        ee6 true;
+    }
+    if (!isMenu)
+        led.off();
+    return isMenu;
 }
 
 bool Controller::connect()
@@ -180,6 +179,11 @@ bool Controller::initIMU()
 
 void Controller::pushKey(uint8_t keycode)
 {
+    for (int i = 0; i < 6; i++)
+    {
+        if (keys[i] == keycode)
+            return;
+    }
     for (int i = 0; i < 6; i++)
     {
         if (keys[i] == HID_KEY_NONE)
@@ -251,6 +255,6 @@ void Controller::sendHID()
     mouseButtons = 0x00;
      for (int i = 0; i < 6; i++)
     {
-        keys[i] == HID_KEY_NONE;
+        keys[i] = HID_KEY_NONE;
     }
 }
