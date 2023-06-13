@@ -10,21 +10,21 @@ void Controller::run()
     while (true)
     {
         umyo.update();
-        umyo.update();
+        checkMuscles();
         if (!connect())
             continue;
-        if (!isMenu())
-        {
-            rightHeand();
-            leftHeand();
-        }
+        isMenu();
+
+        rightHeand();
+        leftHeand();
+
         sendHID();
     }
 }
 
 void Controller::rightHeand()
 {
-    if (umyo.getMuscleLevel(R) > 1000)
+    if (right)
         mouseButtons = MOUSE_BUTTON_LEFT;
     mouseX = -getDelta(readX(R));
     mouseY = -getDelta(readY(R));
@@ -53,7 +53,7 @@ void Controller::leftHeand()
         pushKey(HID_KEY_SPACE);
     if (z < 0)
         pushKey(HID_KEY_SHIFT_LEFT);
-    if (umyo.getMuscleLevel(L) > 1000)
+    if (left)
         mouseButtons = MOUSE_BUTTON_RIGHT;
 }
 
@@ -126,24 +126,15 @@ float Controller::readY(int hand)
     return y;
 }
 
-bool Controller::specialAction()
-{
-    return umyo.getMuscleLevel(R) > 1000 && umyo.getMuscleLevel(L) > 1000;
-}
-
 bool Controller::isMenu()
 {
-    static bool isMenu = false;
-    if (specialAction())
+    
+    if (right && left)
     {
-        led.on();
-        isMenu = !isMenu;
         pushKey(HID_KEY_E);
-        ee6 true;
     }
-    if (!isMenu)
-        led.off();
-    return isMenu;
+    
+    return true;
 }
 
 bool Controller::connect()
@@ -159,10 +150,12 @@ bool Controller::connect()
 bool Controller::initIMU()
 {
     umyo.update();
+    checkMuscles();
+
     if (!connect())
         return false;
     led.on();
-    if (specialAction())
+    if (right && left)
     {
         rxoffset = _90DEG - umyo.getYaw(R);
         ryoffset = _90DEG - umyo.getPitch(R);
@@ -196,6 +189,11 @@ void Controller::pushKey(uint8_t keycode)
 
 void Controller::incNum()
 {
+    const uint32_t interval_ms = 1000;
+    static uint32_t lastupdate = 0;
+    if (board_millis() - lastupdate < interval_ms)
+        return;
+    lastupdate += interval_ms;
     num++;
     if (num > 9)
         num = 1;
@@ -204,6 +202,11 @@ void Controller::incNum()
 
 void Controller::decNum()
 {
+    const uint32_t interval_ms = 1000;
+    static uint32_t lastupdate = 0;
+    if (board_millis() - lastupdate < interval_ms)
+        return;
+    lastupdate += interval_ms;
     num--;
     if (num < 1)
         num = 9;
@@ -253,8 +256,28 @@ void Controller::sendHID()
     while (!hid.setMouseState(mouseButtons, mouseX, mouseY))
         ;
     mouseButtons = 0x00;
-     for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; i++)
     {
         keys[i] = HID_KEY_NONE;
+    }
+}
+
+void Controller::checkMuscles()
+{
+    left = false;
+    right = false;
+    const uint32_t interval_ms = 10;
+    static uint32_t leftLastupdate = 0;
+    static uint32_t rightLastupdate = 0;
+
+    if (umyo.getMuscleLevel(R) > 800 && board_millis() - rightLastupdate >= interval_ms)
+    {
+        rightLastupdate += interval_ms;
+        right = true;
+    }
+    if (umyo.getMuscleLevel(L) > 800 && board_millis() - leftLastupdate >= interval_ms)
+    {
+        leftLastupdate += interval_ms;
+        left = true;
     }
 }

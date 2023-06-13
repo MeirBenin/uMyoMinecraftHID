@@ -26,12 +26,13 @@ private:
     int8_t mouseX = 0;
     int8_t mouseY = 0;
     int8_t num = 1;
+    bool left = false;
+    bool right = false;
     int getDelta(float radian);
     void rightHeand();
     void leftHeand();
     bool isMenu();
     bool connect();
-    bool specialAction();
     float readX(int hand);
     float readY(int hand);
     float readZ(int hand);
@@ -40,6 +41,7 @@ private:
     void decNum();
     void setNum();
     void sendHID();
+    void checkMuscles();
 
 public:
     Controller();
