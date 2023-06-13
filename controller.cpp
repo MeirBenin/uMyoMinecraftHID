@@ -10,11 +10,11 @@ void Controller::run()
     while (true)
     {
         umyo.update();
+        umyo.update();
         if (!connect())
             continue;
         if (!isMenu())
         {
-            led.off();
             rightHeand();
             leftHeand();
         }
@@ -24,7 +24,6 @@ void Controller::run()
 
 void Controller::rightHeand()
 {
-    int butuon = 0;
     if (umyo.getMuscleLevel(R) > 1000)
         mouseButtons = MOUSE_BUTTON_LEFT;
     mouseX = -getDelta(readX(R));
@@ -38,7 +37,7 @@ void Controller::rightHeand()
 
 void Controller::leftHeand()
 {
-    int x = getDelta(readX(L));
+    int x = -getDelta(readX(L));
     int y = getDelta(readY(L));
     int z = getDelta(readZ(L));
 
@@ -134,15 +133,18 @@ bool Controller::specialAction()
 
 bool Controller::isMenu()
 {
-    static bool isMenu = false;
-    if (specialAction())
-    {
-        led.on();
-        isMenu = !isMenu;
-        pushKey(HID_KEY_E);
-        return true;
-    }
-    return isMenu;
+    // static bool isMenu = false;
+    // if (specialAction())
+    // {
+    //     led.on();
+    //     isMenu = !isMenu;
+    //     pushKey(HID_KEY_E);
+    //     return true;
+    // }
+    // if (!isMenu)
+    //     led.off();
+    // return isMenu;
+    return false;
 }
 
 bool Controller::connect()
@@ -169,19 +171,20 @@ bool Controller::initIMU()
         lxoffset = _90DEG - umyo.getYaw(L);
         lyoffset = _90DEG - umyo.getPitch(L);
         lzoffset = _90DEG - umyo.getRoll(L);
+        led.off();
         return true;
     }
     hid.update();
     return false;
 }
 
-void Controller::pushKey(uint8_t keycodes)
+void Controller::pushKey(uint8_t keycode)
 {
     for (int i = 0; i < 6; i++)
     {
         if (keys[i] == HID_KEY_NONE)
         {
-            keys[i] = keycodes;
+            keys[i] = keycode;
             return;
         }
     }
@@ -245,7 +248,8 @@ void Controller::sendHID()
         ;
     while (!hid.setMouseState(mouseButtons, mouseX, mouseY))
         ;
-    for (int i = 0; i < 6; i++)
+    mouseButtons = 0x00;
+     for (int i = 0; i < 6; i++)
     {
         keys[i] == HID_KEY_NONE;
     }

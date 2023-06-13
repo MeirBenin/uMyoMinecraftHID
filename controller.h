@@ -21,7 +21,7 @@ private:
     float lxoffset = 0;
     float lyoffset = 0;
     float lzoffset = 0;
-    uint8_t keys[6] = {0, 0, 0, 0, 0, 0};
+    uint8_t keys[6] = {HID_KEY_NONE, HID_KEY_NONE, HID_KEY_NONE, HID_KEY_NONE, HID_KEY_NONE, HID_KEY_NONE};
     uint8_t mouseButtons = 0;
     int8_t mouseX = 0;
     int8_t mouseY = 0;
