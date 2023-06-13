@@ -36,25 +36,25 @@ bool HIDManager::isReady(void)
   return tud_hid_ready();
 }
 
-bool HIDManager::setKeyboardKey(uint8_t key)
+bool HIDManager::setKeyboardState(uint8_t keycode[6])
 {
   if (!isReady())
     return false;
-  static bool has_keyboard_key = false;
-  if (key != HID_KEY_NONE)
-  {
-    uint8_t keycode[6] = {0};
-    keycode[0] = key;
-    tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
-    has_keyboard_key = true;
-  }
-  else
-  {
-    // send empty key report if previously has key pressed
-    if (has_keyboard_key)
-      tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
-    has_keyboard_key = false;
-  }
+    static bool has_keyboard_key = false;
+
+    if (keycode[0] != HID_KEY_NONE)
+    {
+      tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
+      has_keyboard_key = true;
+    }
+    else
+    {
+      // send empty key report if previously has key pressed
+      if (has_keyboard_key)
+        tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
+      has_keyboard_key = false;
+    }
+   
   return true;
 }
 

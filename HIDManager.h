@@ -11,6 +11,6 @@ private:
 public:
     HIDManager(void);
     void update(void);
-    bool setKeyboardKey(uint8_t keycode);
+    bool setKeyboardState(uint8_t keycode[6]);
     bool setMouseState(uint8_t buttons, int8_t x, int8_t y);
 };

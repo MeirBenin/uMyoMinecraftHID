@@ -14,6 +14,7 @@
 #define _100DEG 100 * DEG
 #define _110DEG 110 * DEG
 #define _120DEG 120 * DEG
+#define _130DEG 130 * DEG
 #define _135DEG 135 * DEG
 #define _140DEG 140 * DEG
 #define _150DEG 150 * DEG
